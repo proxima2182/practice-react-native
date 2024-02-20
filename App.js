@@ -4,7 +4,7 @@ import * as Font from 'expo-font';
 import {Asset} from "expo-asset";
 import {Ionicons} from "@expo/vector-icons"
 import {NavigationContainer} from "@react-navigation/native";
-import Stack from "./navigation/Stack";
+import Navigation from "./navigation/Navigation";
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
@@ -43,7 +43,7 @@ export default function App() {
     }
     return (
         <NavigationContainer>
-            <Stack/>
+            <Navigation/>
         </NavigationContainer>
     );
 }

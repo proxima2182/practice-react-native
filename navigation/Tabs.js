@@ -13,6 +13,7 @@ const Tabs = () => {
     return (<Tab.Navigator
         initialRouteName="Search"
         screenOptions={{
+            headerShown: false,
             tabBarStyle: {
                 backgroundColor: isDark ? NAV_BACKGROUND_DARK : 'white',
             },
