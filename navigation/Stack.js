@@ -1,5 +1,6 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {Text, TouchableOpacity} from "react-native";
+import {YELLOW_COLOR_DARK} from "../colors";
 
 const GenerateScreen = (key) => {
     let nextKey;
@@ -30,7 +31,14 @@ const SceneTwo = ({navigation: {setOptions}}) => {
 
 const NativeStack = createNativeStackNavigator();
 
-const Stack = () => <NativeStack.Navigator>
+const Stack = () => <NativeStack.Navigator
+    screenOptions={{
+        presentation: "fullScreenModal",
+        headerTitleStyle: {
+            color: YELLOW_COLOR_DARK
+        },
+        headerBackTitleVisible: false,
+    }}>
     <NativeStack.Screen name="one" component={GenerateScreen("one")}/>
     <NativeStack.Screen name="two" component={SceneTwo}/>
     <NativeStack.Screen name="three" component={GenerateScreen("three")}/>
