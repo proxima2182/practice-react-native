@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components/native";
 
 const StyledView = styled.TouchableOpacity`
@@ -6,7 +7,13 @@ const StyledView = styled.TouchableOpacity`
     align-items: center;
     background-color: ${(props) => props.theme.mainBgColor};
 `;
-const StyledText = styled.Text`
+
+// attr override
+// https://styled-components.com/docs/basics#attaching-additional-props
+
+const StyledText = styled.Text.attrs<{ selected: boolean }>((props) => ({
+    selected: props.selected
+}))`
     color: ${(props) => props.theme.mainTextColor};
 `;
 
