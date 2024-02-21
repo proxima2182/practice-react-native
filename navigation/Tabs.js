@@ -11,7 +11,9 @@ const Tab = createBottomTabNavigator();
 const Tabs = () => {
     const isDark = useColorScheme() === 'dark';
     return (<Tab.Navigator
-        initialRouteName="Search"
+        sceneContainerStyle={{
+            backgroundColor: isDark ? NAV_BACKGROUND_DARK : 'white',
+        }}
         screenOptions={{
             headerShown: false,
             tabBarStyle: {
