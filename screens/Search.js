@@ -1,9 +1,18 @@
-import {Text, View} from "react-native";
+import styled from "styled-components/native";
+
+const StyledView = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+`;
+const StyledText = styled.Text`
+    color: ${(props) => props.selected ? 'blue' : 'red'}
+`;
 
 const Screen = () => (
-    <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-        <Text>Search</Text>
-    </View>
+    <StyledView>
+        <StyledText selected={true}>Search</StyledText>
+    </StyledView>
 );
 
 export default Screen;
