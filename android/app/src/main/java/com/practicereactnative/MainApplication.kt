@@ -1,4 +1,4 @@
-package com.practicereactnative01
+package com.practicereactnative
 
 import android.app.Application
 import android.content.res.Configuration

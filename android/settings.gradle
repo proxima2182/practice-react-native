@@ -1,4 +1,4 @@
-rootProject.name = 'practicereactnative01'
+rootProject.name = 'practicereactnative'
 
 dependencyResolutionManagement {
   versionCatalogs {

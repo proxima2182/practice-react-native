@@ -1,4 +1,4 @@
-package com.practicereactnative01
+package com.practicereactnative
 
 import android.os.Build
 import android.os.Bundle

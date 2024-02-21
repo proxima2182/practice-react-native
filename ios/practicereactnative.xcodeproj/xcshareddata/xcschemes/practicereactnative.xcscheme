@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "practicereactnative01.app"
-               BlueprintName = "practicereactnative01"
-               ReferencedContainer = "container:practicereactnative01.xcodeproj">
+               BuildableName = "practicereactnative.app"
+               BlueprintName = "practicereactnative"
+               ReferencedContainer = "container:practicereactnative.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "practicereactnative01Tests.xctest"
-               BlueprintName = "practicereactnative01Tests"
-               ReferencedContainer = "container:practicereactnative01.xcodeproj">
+               BuildableName = "practicereactnativeTests.xctest"
+               BlueprintName = "practicereactnativeTests"
+               ReferencedContainer = "container:practicereactnative.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "practicereactnative01.app"
-            BlueprintName = "practicereactnative01"
-            ReferencedContainer = "container:practicereactnative01.xcodeproj">
+            BuildableName = "practicereactnative.app"
+            BlueprintName = "practicereactnative"
+            ReferencedContainer = "container:practicereactnative.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "practicereactnative01.app"
-            BlueprintName = "practicereactnative01"
-            ReferencedContainer = "container:practicereactnative01.xcodeproj">
+            BuildableName = "practicereactnative.app"
+            BlueprintName = "practicereactnative"
+            ReferencedContainer = "container:practicereactnative.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
