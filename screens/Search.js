@@ -1,12 +1,13 @@
 import styled from "styled-components/native";
 
-const StyledView = styled.View`
+const StyledView = styled.TouchableOpacity`
     flex: 1;
     justify-content: center;
     align-items: center;
+    background-color: ${(props) => props.theme.mainBgColor};
 `;
 const StyledText = styled.Text`
-    color: ${(props) => props.selected ? 'blue' : 'red'}
+    color: ${(props) => props.theme.mainTextColor};
 `;
 
 const Screen = () => (

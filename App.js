@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Image} from "react-native";
+import {Image, useColorScheme} from "react-native";
 import * as Font from 'expo-font';
 import {Asset} from "expo-asset";
 import {Ionicons} from "@expo/vector-icons"
 import {NavigationContainer} from "@react-navigation/native";
 import Navigation from "./navigation/Navigation";
+import {darkTheme, lightTheme} from "./styled";
+import {ThemeProvider} from "styled-components/native";
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
@@ -17,6 +19,7 @@ export default function App() {
             return Asset.loadAsync(image);
         }
     })
+    const isDark = useColorScheme() === 'dark';
 
     useEffect(() => {
         async function prepare() {
@@ -42,9 +45,11 @@ export default function App() {
         return null;
     }
     return (
-        <NavigationContainer>
-            <Navigation/>
-        </NavigationContainer>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+            <NavigationContainer>
+                <Navigation/>
+            </NavigationContainer>
+        </ThemeProvider>
     );
 }
 
