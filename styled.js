@@ -6,7 +6,7 @@ export const lightTheme = {
 }
 export const darkTheme = {
     mainBgColor: "#222",
-    mainTextColor: "#1e272e",
+    mainTextColor: "#d2dae2",
     navBgColor: "#1e272e",
     navTextColor: "#d2dae2",
 }

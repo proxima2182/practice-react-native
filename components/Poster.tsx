@@ -6,6 +6,7 @@ const PosterImage = styled.Image`
     width: 100px;
     height: 160px;
     border-radius: 5px;
+    background-color: rgba(220, 220, 200, 0.5);
 `;
 const Component: React.FC<{ path: string }> = ({path}) => {
     return (<PosterImage source={{uri: makeImagePath(path)}}/>);
