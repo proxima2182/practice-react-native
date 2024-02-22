@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {ActivityIndicator, Dimensions} from "react-native";
+import {ActivityIndicator, Dimensions, RefreshControl} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
@@ -80,6 +80,7 @@ const {height: SCREEN_HEIGHT} = Dimensions.get("window");
 
 const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {navigate}}) => {
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const [nowPlaying, setNowPlaying] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
     const [trending, setTrending] = useState([]);
@@ -134,11 +135,20 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
         getData();
     }, []);
 
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await getData();
+        setRefreshing(false);
+    };
+
     return loading ?
         (<Loading>
             <ActivityIndicator size="large"/>
         </Loading>)
-        : (<Container>
+        : (<Container
+            refreshControl={<RefreshControl refreshing={refreshing}
+            onRefresh={onRefresh}/>}
+        >
             <Swiper
                 horizontal
                 loop
@@ -181,7 +191,7 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
             <ListTitle>Coming Soon</ListTitle>
             <ListContainer>
                 {
-                    upcoming.reverse().map(movie => (
+                    upcoming.map(movie => (
                         <UpcomingView key={movie.id}>
                             <Poster path={movie.poster_path}/>
                             <UpcomingColumn>
