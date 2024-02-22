@@ -7,6 +7,7 @@ declare module 'styled-components/native' {
     export interface DefaultTheme {
         mainBgColor: string;
         mainTextColor: string;
+        mainContentColor: string;
         navBgColor: string;
         navTextColor: string;
     }

@@ -1,29 +1,24 @@
-import {makeImagePath} from "../utils";
+import {limitTextSize, makeImagePath} from "../utils";
 import {BlurView} from "expo-blur";
 import {StyleSheet, useColorScheme, View} from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import Poster from "./Poster";
+import VoteText from "./VoteText";
 
 const BackgroundImage = styled.Image`
     width: 100%;
     height: 100%;
     position: absolute;
 `;
-const Title = styled.Text<{ isDark: boolean }>`
+const Title = styled.Text`
     font-size: 16px;
     font-weight: 600;
-    color: ${(props) => props.isDark ? "white" : "black"};
+    color: ${(props) => props.theme.mainTextColor};
 `;
-const Overview = styled.Text<{ isDark: boolean }>`
+const Overview = styled.Text`
     margin-top: 5px;
-    color: ${(props) => props.isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)"};
-`;
-/**
- * styled(...) 라고 했을 시에 전체 css 를 가져옴
- */
-const Votes = styled(Overview)`
-    margin-top: 10px;
+    color: ${(props) => props.theme.mainContentColor};
 `;
 const Wrapper = styled.View`
     flex-direction: row;
@@ -36,7 +31,7 @@ const Column = styled.View`
     margin-left: 15px;
 `;
 
-interface SlideProps {
+interface IProps {
     id: string;
     backdrop_path: string;
     poster_path: string;
@@ -45,7 +40,7 @@ interface SlideProps {
     overview: string;
 }
 
-const Component: React.FC<{ props: SlideProps }> = ({props}) => {
+const Component: React.FC<{ props: IProps }> = ({props}) => {
     const isDark = useColorScheme() === 'dark';
     let voteAverage = Math.floor(parseFloat(props.vote_average) * 100) / 100;
     return (
@@ -60,14 +55,9 @@ const Component: React.FC<{ props: SlideProps }> = ({props}) => {
                 <Wrapper>
                     <Poster path={props.poster_path}/>
                     <Column>
-                        <Title isDark={isDark}>{props.original_title}</Title>
-                        {
-                            voteAverage > 0 ? (
-                                <Votes isDark={isDark}>{`★${props.vote_average}/10`}</Votes>
-                            ) : null
-                        }
-                        <Overview
-                            isDark={isDark}>{`${props.overview.slice(0, 100)}${props.overview.length > 100 ? "..." : ""}`}</Overview>
+                        <Title>{props.original_title}</Title>
+                        <VoteText vote_average={props.vote_average}/>
+                        <Overview>{limitTextSize(props.overview, 100)}</Overview>
                     </Column>
                 </Wrapper>
             </BlurView>
