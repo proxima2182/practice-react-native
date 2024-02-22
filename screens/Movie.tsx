@@ -27,6 +27,8 @@ const {height: SCREEN_HEIGHT} = Dimensions.get("window");
 const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {navigate}}) => {
     const [loading, setLoading] = useState(true);
     const [nowPlaying, setNowPlaying] = useState([]);
+    const [upcoming, setUpcoming] = useState([]);
+    const [trending, setTrending] = useState([]);
     const getNowPlaying = async () => {
         const options = {
             method: 'GET',
@@ -40,11 +42,42 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
             await fetch('https://api.themoviedb.org/3/movie/now_playing?language=kor&page=1', options)
         ).json();
         setNowPlaying(results);
+    }
+    const getUpcoming = async () => {
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${ACCESS_KEY}`
+            }
+        };
+
+        const {results} = await (
+            await fetch('https://api.themoviedb.org/3/movie/upcoming?language=kor&page=1', options)
+        ).json();
+        setUpcoming(results);
+    }
+    const getTrending = async () => {
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${ACCESS_KEY}`
+            }
+        };
+
+        const {results} = await (
+            await fetch('https://api.themoviedb.org/3/trending/movie/week', options)
+        ).json();
+        setTrending(results);
+    }
+    const getData = async () => {
+        await Promise.all([getNowPlaying(), getUpcoming(), getTrending()]);
         setLoading(false);
     }
     // https://image.tmdb.org/t/p/w500
     useEffect(() => {
-        getNowPlaying();
+        getData();
     }, []);
 
     return loading ?

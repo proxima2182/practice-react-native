@@ -3,16 +3,12 @@ import {BlurView} from "expo-blur";
 import {StyleSheet, useColorScheme, View} from "react-native";
 import React from "react";
 import styled from "styled-components/native";
+import Poster from "./Poster";
 
 const BackgroundImage = styled.Image`
     width: 100%;
     height: 100%;
     position: absolute;
-`;
-const PosterImage = styled.Image`
-    width: 100px;
-    height: 160px;
-    border-radius: 5px;
 `;
 const Title = styled.Text<{ isDark: boolean }>`
     font-size: 16px;
@@ -49,7 +45,7 @@ interface SlideProps {
     overview: string;
 }
 
-const Component: React.FC<{props: SlideProps}> = ({props}) => {
+const Component: React.FC<{ props: SlideProps }> = ({props}) => {
     const isDark = useColorScheme() === 'dark';
     let voteAverage = Math.floor(parseFloat(props.vote_average) * 100) / 100;
     return (
@@ -62,7 +58,7 @@ const Component: React.FC<{props: SlideProps}> = ({props}) => {
                 tint={isDark ? 'dark' : 'light'}
                 style={StyleSheet.absoluteFill}>
                 <Wrapper>
-                    <PosterImage source={{uri: makeImagePath(props.poster_path)}}/>
+                    <Poster path={props.poster_path}/>
                     <Column>
                         <Title isDark={isDark}>{props.original_title}</Title>
                         {
