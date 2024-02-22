@@ -10,7 +10,7 @@ const Title = styled.Text`
 `;
 const View = styled.View`
     flex-direction: row;
-    margin-bottom: 30px;
+    margin: 0 20px;
 `;
 const Column = styled.View`
     width: 80%;

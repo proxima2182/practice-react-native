@@ -44,7 +44,7 @@ const Component: React.FC<{ props: IProps }> = ({props}) => {
     const isDark = useColorScheme() === 'dark';
     let voteAverage = Math.floor(parseFloat(props.vote_average) * 100) / 100;
     return (
-        <View style={{flex: 1}} key={props.id}>
+        <View style={{flex: 1}}>
             <BackgroundImage source={{
                 uri: makeImagePath(props.backdrop_path)
             }}/>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {ActivityIndicator, Dimensions, RefreshControl} from "react-native";
+import {ActivityIndicator, Dimensions, FlatList} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
@@ -25,12 +25,11 @@ const ListTitle = styled.Text`
     font-weight: 600;
     margin: 15px 30px;
 `;
-
-const TrendingScrollView = styled.ScrollView`
+const HorizontalSeparator = styled.View`
+    width: 15px;
 `;
-
-const ListContainer = styled.View`
-    padding: 0 30px;
+const VerticalSeparator = styled.View`
+    height: 20px;
 `;
 
 /**
@@ -102,56 +101,57 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
         setRefreshing(false);
     };
 
+    const extractKey = (item: never, index: number) => item['id'] ?? 'I' + index;
+
     return loading ?
         (<Loading>
             <ActivityIndicator size="large"/>
         </Loading>)
-        : (<Container
-            refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}/>
-            }>
-            <Swiper
-                horizontal
-                loop
-                autoplay
-                autoplayTimeout={3.5}
-                showsButtons={false}
-                showsPagination={false}
-                containerStyle={{
-                    width: "100%",
-                    height: SCREEN_HEIGHT / 4,
-                }}>
-                {
-                    nowPlaying.map(movie => (
-                        <SlideItem props={movie}/>
-                    ))
-                }
-            </Swiper>
-            <ListTitle>Trending Movies</ListTitle>
-            <TrendingScrollView
-                contentContainerStyle={{
-                    paddingLeft: 30,
-                    paddingRight: 10
-                }}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                {
-                    trending.reverse().map(movie => (
-                        <HorizontalItem props={movie}/>
-                    ))
-                }
-            </TrendingScrollView>
-            <ListTitle>Coming Soon</ListTitle>
-            <ListContainer>
-                {
-                    upcoming.map(movie => (
-                        <VerticalItem props={movie}/>
-                    ))
-                }
-            </ListContainer>
-        </Container>);
+        : (<FlatList
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            ListHeaderComponent={
+                <>
+                    <Swiper
+                        horizontal
+                        loop
+                        autoplay
+                        autoplayTimeout={3.5}
+                        showsButtons={false}
+                        showsPagination={false}
+                        containerStyle={{
+                            width: "100%",
+                            height: SCREEN_HEIGHT / 4,
+                        }}>
+                        {
+                            nowPlaying.map((movie, index) => (
+                                <SlideItem key={extractKey(movie, index)} props={movie}/>
+                            ))
+                        }
+                    </Swiper>
+                    <ListTitle>Trending Movies</ListTitle>
+                    <FlatList
+                        data={trending}
+                        renderItem={({item}) => <HorizontalItem props={item}/>}
+                        keyExtractor={extractKey}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        ItemSeparatorComponent={HorizontalSeparator}
+                        contentContainerStyle={{
+                            paddingHorizontal: 20
+                        }}
+                    />
+                    <ListTitle>Coming Soon</ListTitle>
+                </>
+            }
+            data={upcoming}
+            renderItem={({item}) => <VerticalItem props={item}/>}
+            keyExtractor={extractKey}
+            ItemSeparatorComponent={VerticalSeparator}
+            style={{
+                marginBottom: 20
+            }}
+        />);
 };
 
 export default Screen;

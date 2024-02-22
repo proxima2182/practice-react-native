@@ -5,7 +5,6 @@ import VoteText from "./VoteText";
 import {limitTextSize} from "../utils";
 
 const TrendingView = styled.View`
-    margin-right: 20px;
     align-items: center;
 `;
 const Title = styled.Text`
