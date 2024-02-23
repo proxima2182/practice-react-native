@@ -15,6 +15,7 @@ const Tabs = () => {
             backgroundColor: isDark ? NAV_BACKGROUND_DARK : 'white',
         }}
         screenOptions={{
+            unmountOnBlur: true, // caching 이 적용되는 부분이 있다면 해당 페이지의 cache 를 비운다
             headerShown: false,
             tabBarStyle: {
                 backgroundColor: isDark ? NAV_BACKGROUND_DARK : 'white',

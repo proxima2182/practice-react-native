@@ -15,14 +15,7 @@ const Title = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
 `;
 
-interface IProps {
-    id: string;
-    poster_path: string;
-    original_title: string;
-    vote_average: string;
-}
-
-const Component: React.FC<{ props: IProps }> = ({props}) => {
+const Component: React.FC<{ props: ITrending }> = ({props}) => {
     return (
         <TrendingView key={props.id}>
             <Poster path={props.poster_path}/>

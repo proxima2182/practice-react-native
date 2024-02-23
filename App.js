@@ -5,8 +5,11 @@ import {Asset} from "expo-asset";
 import {Ionicons} from "@expo/vector-icons"
 import {NavigationContainer} from "@react-navigation/native";
 import Navigation from "./navigation/Navigation";
-import {darkTheme, lightTheme} from "./styled";
 import {ThemeProvider} from "styled-components/native";
+import {darkTheme, lightTheme} from "./styled";
+import {QueryClient, QueryClientProvider} from "react-query";
+
+const queryClient = new QueryClient();
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
@@ -45,11 +48,13 @@ export default function App() {
         return null;
     }
     return (
-        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-            <NavigationContainer>
-                <Navigation/>
-            </NavigationContainer>
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+                <NavigationContainer>
+                    <Navigation/>
+                </NavigationContainer>
+            </ThemeProvider>
+        </QueryClientProvider>
     );
 }
 

@@ -31,16 +31,7 @@ const Column = styled.View`
     margin-left: 15px;
 `;
 
-interface IProps {
-    id: string;
-    backdrop_path: string;
-    poster_path: string;
-    original_title: string;
-    vote_average: string;
-    overview: string;
-}
-
-const Component: React.FC<{ props: IProps }> = ({props}) => {
+const Component: React.FC<{ props: INowPlaying }> = ({props}) => {
     const isDark = useColorScheme() === 'dark';
     let voteAverage = Math.floor(parseFloat(props.vote_average) * 100) / 100;
     return (

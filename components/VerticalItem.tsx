@@ -26,15 +26,7 @@ const DateText = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
 `;
 
-interface IProps {
-    id: string;
-    poster_path: string;
-    original_title: string;
-    overview: string;
-    release_date: any;
-}
-
-const Component: React.FC<{ props: IProps }> = ({props}) => {
+const Component: React.FC<{ props: IUpcoming }> = ({props}) => {
     return (
         <View key={props.id}>
             <Poster path={props.poster_path}/>

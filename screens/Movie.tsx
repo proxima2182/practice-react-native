@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {ActivityIndicator, Dimensions, FlatList} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import styled from "styled-components/native";
@@ -6,8 +6,8 @@ import Swiper from "react-native-swiper";
 import SlideItem from "../components/SlideItem";
 import HorizontalItem from "../components/HorizontalItem";
 import VerticalItem from "../components/VerticalItem";
-
-const ACCESS_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzODkzOWU3MDVlYzY1NWVjZWNiY2QxYjkyMDUxZjBmNCIsInN1YiI6IjY1ZDU3ZWIzYzhhNWFjMDE3YmUxOGM1MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VTCEAkUcQv2GfYNaO7qZkfpS8kKbHanJ3COeEVbX0W0";
+import {useQueryClient} from "react-query";
+import Api from "../Api";
 
 const Container = styled.ScrollView`
 `;
@@ -39,77 +39,25 @@ const VerticalSeparator = styled.View`
 const {height: SCREEN_HEIGHT} = Dimensions.get("window");
 
 const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {navigate}}) => {
-    const [loading, setLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false);
-    const [nowPlaying, setNowPlaying] = useState([]);
-    const [upcoming, setUpcoming] = useState([]);
-    const [trending, setTrending] = useState([]);
-    const getNowPlaying = async () => {
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${ACCESS_KEY}`
-            }
-        };
+    const queryClient = useQueryClient();
+    const nowPlaying = Api.movie.nowPlaying();
+    const trending = Api.movie.trending();
+    const upcoming = Api.movie.upcoming();
 
-        const {results} = await (
-            await fetch('https://api.themoviedb.org/3/movie/now_playing?language=kor&page=1', options)
-        ).json();
-        setNowPlaying(results);
-    }
-    const getUpcoming = async () => {
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${ACCESS_KEY}`
-            }
-        };
+    const isLoading = nowPlaying.isLoading || trending.isLoading || upcoming.isLoading;
+    const isRefreshing = nowPlaying.isRefetching || trending.isRefetching || upcoming.isRefetching
 
-        const {results} = await (
-            await fetch('https://api.themoviedb.org/3/movie/upcoming?language=kor&page=1', options)
-        ).json();
-        setUpcoming(results);
-    }
-    const getTrending = async () => {
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${ACCESS_KEY}`
-            }
-        };
+    const extractKey = (item: IMovie, index: number) => item.id ?? 'I' + index;
 
-        const {results} = await (
-            await fetch('https://api.themoviedb.org/3/trending/movie/week', options)
-        ).json();
-        setTrending(results);
-    }
-    const getData = async () => {
-        await Promise.all([getNowPlaying(), getUpcoming(), getTrending()]);
-        setLoading(false);
-    };
-    // https://image.tmdb.org/t/p/w500
-    useEffect(() => {
-        getData();
-    }, []);
-
-    const onRefresh = async () => {
-        setRefreshing(true);
-        await getData();
-        setRefreshing(false);
-    };
-
-    const extractKey = (item: never, index: number) => item['id'] ?? 'I' + index;
-
-    return loading ?
+    return isLoading ?
         (<Loading>
             <ActivityIndicator size="large"/>
-        </Loading>)
-        : (<FlatList
-            refreshing={refreshing}
-            onRefresh={onRefresh}
+        </Loading>) :
+        (<FlatList
+            refreshing={isRefreshing}
+            onRefresh={() => {
+                queryClient.refetchQueries(["movie"])
+            }}
             ListHeaderComponent={
                 <>
                     <Swiper
@@ -124,14 +72,14 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
                             height: SCREEN_HEIGHT / 4,
                         }}>
                         {
-                            nowPlaying.map((movie, index) => (
-                                <SlideItem key={extractKey(movie, index)} props={movie}/>
+                            (nowPlaying.data?.results ?? []).map((item, index) => (
+                                <SlideItem key={extractKey(item, index)} props={item}/>
                             ))
                         }
                     </Swiper>
                     <ListTitle>Trending Movies</ListTitle>
                     <FlatList
-                        data={trending}
+                        data={(trending.data?.results ?? [])}
                         renderItem={({item}) => <HorizontalItem props={item}/>}
                         keyExtractor={extractKey}
                         horizontal={true}
@@ -144,7 +92,7 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
                     <ListTitle>Coming Soon</ListTitle>
                 </>
             }
-            data={upcoming}
+            data={upcoming.data?.results ?? []}
             renderItem={({item}) => <VerticalItem props={item}/>}
             keyExtractor={extractKey}
             ItemSeparatorComponent={VerticalSeparator}
