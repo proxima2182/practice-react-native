@@ -1,10 +1,11 @@
-import React from "react";
-import {ScrollView} from "react-native";
+import React, {useState} from "react";
+import {RefreshControl, ScrollView} from "react-native";
 import Api from "../Api";
 import Loading from "../components/Loading";
 import HorizontalList from "../components/HorizontalList";
 import ListTitle from "../components/ListTitle";
 import {IHorizontalItemProps} from "../components/HorizontalItem";
+import {useQueryClient} from "react-query";
 
 function mapToItem(array: ITVData[]) {
     return array.map(item => {
@@ -18,14 +19,23 @@ function mapToItem(array: ITVData[]) {
 }
 
 const Screen = () => {
+    const queryClient = useQueryClient();
+    const [isRefreshing, setRefreshing] = useState(false);
     const airingToday = Api.TV.airingToday();
     const trending = Api.TV.trending();
     const topRated = Api.TV.topRated();
 
     const isLoading = airingToday.isLoading || trending.isLoading || topRated.isLoading;
+    const onRefresh = async () => {
+        setRefreshing(true)
+        queryClient.refetchQueries(['tv'])
+        setRefreshing(false)
+    }
+
     return isLoading ?
         (<Loading/>) :
-        (<ScrollView>
+        (<ScrollView
+            refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh}/>}>
             <ListTitle>Airing Today</ListTitle>
             <HorizontalList array={mapToItem(airingToday.data?.results ?? [])}/>
             <ListTitle>Trending</ListTitle>

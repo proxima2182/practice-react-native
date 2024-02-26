@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Dimensions, FlatList} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import styled from "styled-components/native";
@@ -10,6 +10,7 @@ import {useQueryClient} from "react-query";
 import Api from "../Api";
 import Loading from "../components/Loading";
 import {extractKey} from "../utils";
+import HorizontalList from "../components/HorizontalList";
 
 const ListTitle = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
@@ -30,22 +31,38 @@ const VerticalSeparator = styled.View`
  */
 const {height: SCREEN_HEIGHT} = Dimensions.get("window");
 
+function mapToItem(array: ITrending[]) {
+    return array.map(item => {
+        return {
+            id: item.id,
+            image: item.poster_path,
+            title: item.original_title,
+            rate: item.vote_average,
+        } as IHorizontalItemProps
+    });
+}
+
 const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {navigate}}) => {
     const queryClient = useQueryClient();
+    const [isRefreshing, setRefreshing] = useState(false);
     const nowPlaying = Api.Movie.nowPlaying();
     const trending = Api.Movie.trending();
     const upcoming = Api.Movie.upcoming();
 
     const isLoading = nowPlaying.isLoading || trending.isLoading || upcoming.isLoading;
-    const isRefreshing = nowPlaying.isRefetching || trending.isRefetching || upcoming.isRefetching
+    // 기존 const isRefreshing = nowPlaying.isRefetching || trending.isRefetching || upcoming.isRefetching 형태로 사용하면
+    // refresh 가 개별적으로 이뤄지기 때문에 끊기는 현상이 생겨서 async를 한 작업으로 묶어줌
+    const onRefresh = async () => {
+        setRefreshing(true)
+        queryClient.refetchQueries(['movie'])
+        setRefreshing(false)
+    }
 
     return isLoading ?
         (<Loading/>) :
         (<FlatList
             refreshing={isRefreshing}
-            onRefresh={() => {
-                queryClient.refetchQueries(["movie"])
-            }}
+            onRefresh={onRefresh}
             ListHeaderComponent={
                 <>
                     <Swiper
@@ -66,22 +83,7 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
                         }
                     </Swiper>
                     <ListTitle>Trending Movies</ListTitle>
-                    <FlatList
-                        data={(trending.data?.results ?? [])}
-                        renderItem={({item}) => <HorizontalItem props={{
-                            id: item.id,
-                            image: item.poster_path,
-                            title: item.original_title,
-                            rate: item.vote_average,
-                        } as IHorizontalItemProps}/>}
-                        keyExtractor={extractKey}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        ItemSeparatorComponent={HorizontalSeparator}
-                        contentContainerStyle={{
-                            paddingHorizontal: 20
-                        }}
-                    />
+                    <HorizontalList array={mapToItem(trending.data?.results ?? [])}/>
                     <ListTitle>Coming Soon</ListTitle>
                 </>
             }
