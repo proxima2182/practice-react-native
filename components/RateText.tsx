@@ -7,13 +7,13 @@ const View = styled.Text`
     color: ${(props) => props.theme.mainContentColor};
 `;
 
-interface VoteTextProps {
-    vote_average: string;
+interface IProps {
+    vote_average: number;
     style?: TextStyle;
 }
 
-const Component: React.FC<VoteTextProps> = ({vote_average, style}) => {
-    let voteAverage = Math.floor(parseFloat(vote_average) * 100) / 100;
+const Component: React.FC<IProps> = ({vote_average, style}) => {
+    let voteAverage = Math.floor(vote_average * 100) / 100;
     return (
         <View style={style}>
             {

@@ -26,15 +26,22 @@ const DateText = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
 `;
 
-const Component: React.FC<{ props: IUpcoming }> = ({props}) => {
+export interface IVerticalItemProps extends IRootItem {
+    image: string;
+    title: string;
+    content: string;
+    date: string;
+}
+
+const Component: React.FC<{ props: IVerticalItemProps }> = ({props}) => {
     return (
         <View key={props.id}>
-            <Poster path={props.poster_path}/>
+            <Poster path={props.image}/>
             <Column>
-                <Title>{limitTextSize(props.original_title, 30)}</Title>
-                <Overview>{limitTextSize(props.overview, 150)}</Overview>
+                <Title>{limitTextSize(props.title, 30)}</Title>
+                <Overview>{limitTextSize(props.content, 150)}</Overview>
                 <DateText>
-                    {new Date(props.release_date).toLocaleDateString('ko')}
+                    {new Date(props.date).toLocaleDateString('ko')}
                 </DateText>
             </Column>
         </View>

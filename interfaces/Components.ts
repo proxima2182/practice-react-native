@@ -1,0 +1,5 @@
+
+interface IRootItem {
+    id: string;
+}
+

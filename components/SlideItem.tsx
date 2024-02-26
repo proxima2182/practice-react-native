@@ -4,7 +4,7 @@ import {StyleSheet, useColorScheme, View} from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import Poster from "./Poster";
-import VoteText from "./VoteText";
+import RateText from "./RateText";
 
 const BackgroundImage = styled.Image`
     width: 100%;
@@ -33,7 +33,6 @@ const Column = styled.View`
 
 const Component: React.FC<{ props: INowPlaying }> = ({props}) => {
     const isDark = useColorScheme() === 'dark';
-    let voteAverage = Math.floor(parseFloat(props.vote_average) * 100) / 100;
     return (
         <View style={{flex: 1}}>
             <BackgroundImage source={{
@@ -47,7 +46,7 @@ const Component: React.FC<{ props: INowPlaying }> = ({props}) => {
                     <Poster path={props.poster_path}/>
                     <Column>
                         <Title>{props.original_title}</Title>
-                        <VoteText vote_average={props.vote_average}/>
+                        <RateText vote_average={props.vote_average}/>
                         <Overview>{limitTextSize(props.overview, 100)}</Overview>
                     </Column>
                 </Wrapper>

@@ -1,7 +1,7 @@
 import React from "react";
 import Poster from "./Poster";
 import styled from "styled-components/native";
-import VoteText from "./VoteText";
+import RateText from "./RateText";
 import {limitTextSize} from "../utils";
 
 const TrendingView = styled.View`
@@ -15,12 +15,18 @@ const Title = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
 `;
 
-const Component: React.FC<{ props: ITrending }> = ({props}) => {
+export interface IHorizontalItemProps extends IRootItem{
+    image: string;
+    title: string;
+    rate: number;
+}
+
+const Component: React.FC<{ props: IHorizontalItemProps }> = ({props}) => {
     return (
         <TrendingView key={props.id}>
-            <Poster path={props.poster_path}/>
-            <VoteText vote_average={props.vote_average} style={{width: '100%', fontSize: 12}}/>
-            <Title>{limitTextSize(props.original_title, 30)}</Title>
+            <Poster path={props.image}/>
+            <RateText vote_average={props.rate} style={{width: '100%', fontSize: 12}}/>
+            <Title>{limitTextSize(props.title, 30)}</Title>
         </TrendingView>
     );
 }

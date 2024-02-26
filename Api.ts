@@ -32,5 +32,27 @@ const upcoming = () => {
 }
 
 export default {
-    movie: {nowPlaying, trending, upcoming}
+    Movie: {
+        nowPlaying: () => useQuery<IBaseResponse<INowPlaying>>(
+            ["movie", "nowPlaying"],
+            generateFetch('/movie/now_playing?language=kor&page=1')),
+        trending: () => useQuery<IBaseResponse<ITrending>>(
+            ["movie", "trending"],
+            generateFetch('/trending/movie/week')),
+        upcoming: () => useQuery<IBaseResponse<IUpcoming>>(
+            ["movie", "upcoming"],
+            generateFetch('/movie/upcoming?language=kor&page=1'))
+    },
+    TV: {
+        airingToday: () => useQuery<IBaseResponse<ITVData>>(
+            ["tv", "airingToday"],
+            generateFetch('/tv/airing_today')),
+        trending: () => useQuery<IBaseResponse<ITVData>>(
+            ["tv", "trending"],
+            generateFetch('/trending/tv/week')),
+        topRated: () => useQuery<IBaseResponse<ITVData>>(
+            ["tv", "topRated"],
+            generateFetch('/tv/top_rated')),
+
+    }
 }

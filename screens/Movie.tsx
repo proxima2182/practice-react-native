@@ -1,24 +1,16 @@
 import React from "react";
-import {ActivityIndicator, Dimensions, FlatList} from "react-native";
+import {Dimensions, FlatList} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import SlideItem from "../components/SlideItem";
-import HorizontalItem from "../components/HorizontalItem";
-import VerticalItem from "../components/VerticalItem";
+import HorizontalItem, {IHorizontalItemProps} from "../components/HorizontalItem";
+import VerticalItem, {IVerticalItemProps} from "../components/VerticalItem";
 import {useQueryClient} from "react-query";
 import Api from "../Api";
+import Loading from "../components/Loading";
+import {extractKey} from "../utils";
 
-const Container = styled.ScrollView`
-`;
-const Loading = styled.View`
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-`;
-const View = styled.View`
-    flex: 1;
-`;
 const ListTitle = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
     font-size: 18px;
@@ -40,19 +32,15 @@ const {height: SCREEN_HEIGHT} = Dimensions.get("window");
 
 const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {navigate}}) => {
     const queryClient = useQueryClient();
-    const nowPlaying = Api.movie.nowPlaying();
-    const trending = Api.movie.trending();
-    const upcoming = Api.movie.upcoming();
+    const nowPlaying = Api.Movie.nowPlaying();
+    const trending = Api.Movie.trending();
+    const upcoming = Api.Movie.upcoming();
 
     const isLoading = nowPlaying.isLoading || trending.isLoading || upcoming.isLoading;
     const isRefreshing = nowPlaying.isRefetching || trending.isRefetching || upcoming.isRefetching
 
-    const extractKey = (item: IMovie, index: number) => item.id ?? 'I' + index;
-
     return isLoading ?
-        (<Loading>
-            <ActivityIndicator size="large"/>
-        </Loading>) :
+        (<Loading/>) :
         (<FlatList
             refreshing={isRefreshing}
             onRefresh={() => {
@@ -80,7 +68,12 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
                     <ListTitle>Trending Movies</ListTitle>
                     <FlatList
                         data={(trending.data?.results ?? [])}
-                        renderItem={({item}) => <HorizontalItem props={item}/>}
+                        renderItem={({item}) => <HorizontalItem props={{
+                            id: item.id,
+                            image: item.poster_path,
+                            title: item.original_title,
+                            rate: item.vote_average,
+                        } as IHorizontalItemProps}/>}
                         keyExtractor={extractKey}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
@@ -93,7 +86,15 @@ const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {na
                 </>
             }
             data={upcoming.data?.results ?? []}
-            renderItem={({item}) => <VerticalItem props={item}/>}
+            renderItem={({item}) => {
+                return <VerticalItem props={{
+                    id: item.id,
+                    image: item.poster_path,
+                    title: item.original_title,
+                    content: item.overview,
+                    date: item.release_date,
+                } as IVerticalItemProps}/>
+            }}
             keyExtractor={extractKey}
             ItemSeparatorComponent={VerticalSeparator}
             style={{
