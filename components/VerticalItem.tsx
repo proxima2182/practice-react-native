@@ -2,6 +2,9 @@ import React from "react";
 import Poster from "./Poster";
 import styled from "styled-components/native";
 import {limitTextSize} from "../utils";
+import {useNavigation} from "@react-navigation/native";
+import {TouchableOpacity} from "react-native";
+import {RootNavigationProp} from "../navigation/Navigation";
 
 const Title = styled.Text`
     font-weight: 600;
@@ -34,17 +37,28 @@ export interface IVerticalItemProps extends IRootItem {
 }
 
 const Component: React.FC<{ props: IVerticalItemProps }> = ({props}) => {
+    const navigation = useNavigation<RootNavigationProp>();
+    const goToDetail = () => {
+        navigation.navigate("Stack", {
+            screen: 'Detail',
+            params: {
+                originalTitle: props.title
+            }
+        });
+    }
     return (
-        <View key={props.id}>
-            <Poster path={props.image}/>
-            <Column>
-                <Title>{limitTextSize(props.title, 30)}</Title>
-                <Overview>{limitTextSize(props.content, 150)}</Overview>
-                <DateText>
-                    {new Date(props.date).toLocaleDateString('ko')}
-                </DateText>
-            </Column>
-        </View>
+        <TouchableOpacity onPress={goToDetail}>
+            <View key={props.id}>
+                <Poster path={props.image}/>
+                <Column>
+                    <Title>{limitTextSize(props.title, 30)}</Title>
+                    <Overview>{limitTextSize(props.content, 150)}</Overview>
+                    <DateText>
+                        {new Date(props.date).toLocaleDateString('ko')}
+                    </DateText>
+                </Column>
+            </View>
+        </TouchableOpacity>
     );
 }
 export default Component;

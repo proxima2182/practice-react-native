@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Dimensions, FlatList} from "react-native";
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import SlideItem from "../components/SlideItem";
@@ -11,6 +10,7 @@ import Api from "../Api";
 import Loading from "../components/Loading";
 import {extractKey} from "../utils";
 import HorizontalList from "../components/HorizontalList";
+import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 
 const ListTitle = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
@@ -42,7 +42,7 @@ function mapToItem(array: ITrending[]) {
     });
 }
 
-const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {navigate}}) => {
+const Screen: React.FC<BottomTabScreenProps<any, "Movie">> = () => {
     const queryClient = useQueryClient();
     const [isRefreshing, setRefreshing] = useState(false);
     const nowPlaying = useQuery(Api.Movie.nowPlaying());

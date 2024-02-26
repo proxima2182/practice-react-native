@@ -6,6 +6,7 @@ import Loading from "../components/Loading";
 import HorizontalList from "../components/HorizontalList";
 import {IHorizontalItemProps} from "../components/HorizontalItem";
 import ListTitle from "../components/ListTitle";
+import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 
 const Container = styled.ScrollView`
 `;
@@ -41,7 +42,7 @@ function mapToTVItem(array: ITVData[]) {
     });
 }
 
-const Screen = () => {
+const Screen : React.FC<BottomTabScreenProps<any, "Search">> = () => {
     const [query, setQuery] = useState("")
     const searchMovie = useQuery({
         ...Api.Search.movie(query),

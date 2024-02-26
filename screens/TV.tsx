@@ -6,6 +6,7 @@ import HorizontalList from "../components/HorizontalList";
 import ListTitle from "../components/ListTitle";
 import {IHorizontalItemProps} from "../components/HorizontalItem";
 import {useQuery, useQueryClient} from "react-query";
+import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 
 function mapToItem(array: ITVData[]) {
     return array.map(item => {
@@ -18,7 +19,7 @@ function mapToItem(array: ITVData[]) {
     });
 }
 
-const Screen = () => {
+const Screen: React.FC<BottomTabScreenProps<any, "TV">> = () => {
     const queryClient = useQueryClient();
     const [isRefreshing, setRefreshing] = useState(false);
     const airingToday = useQuery(Api.TV.airingToday());
