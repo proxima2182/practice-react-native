@@ -31,7 +31,7 @@ const Column = styled.View`
     margin-left: 15px;
 `;
 
-const Component: React.FC<{ props: INowPlaying }> = ({props}) => {
+const Component: React.FC<{ props: IMovieData }> = ({props}) => {
     const isDark = useColorScheme() === 'dark';
     return (
         <View style={{flex: 1}}>

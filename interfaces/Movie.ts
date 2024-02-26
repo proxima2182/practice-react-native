@@ -1,4 +1,4 @@
-interface INowPlaying extends IRootItem {
+interface IMovieData extends IRootItem {
     adult: boolean;
     backdrop_path: string;
     genre_ids: number[];
@@ -29,7 +29,6 @@ interface ITrending extends IRootItem {
     video: boolean;
     vote_average: number;
     vote_count: number;
-
 }
 
 interface IUpcoming extends IRootItem {
@@ -46,5 +45,4 @@ interface IUpcoming extends IRootItem {
     video: boolean;
     vote_average: number;
     vote_count: number;
-
 }

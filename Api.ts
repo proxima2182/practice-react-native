@@ -18,7 +18,11 @@ const generateFetch = <TData>(url: string) => {
             Authorization: `Bearer ${ACCESS_KEY}`
         }
     };
-    return ((info: QueryFunctionContext<QueryKey>) => fetch(`${BASE_URL}${url}`, options).then(response => response.json())) as QueryFunction<IBaseResponse<TData>, QueryKey>
+    return ((info: QueryFunctionContext<QueryKey>) => {
+        // ES6 : 이런 식으로 배열의 특정 값 가져올 수 있음
+        // const [_, secondQueryKey] = info.queryKey;
+        return fetch(`${BASE_URL}${url}`, options).then(response => response.json())
+    }) as QueryFunction<IBaseResponse<TData>, QueryKey>
 }
 
 export default {
@@ -26,7 +30,7 @@ export default {
         nowPlaying: () => {
             return {
                 queryKey: ["movie", "nowPlaying"],
-                queryFn: generateFetch<INowPlaying>('/movie/now_playing?language=kor&page=1')
+                queryFn: generateFetch<IMovieData>('/movie/now_playing?language=kor&page=1')
             }
         },
         trending: () => {
@@ -62,4 +66,18 @@ export default {
             }
         },
     },
+    Search: {
+        movie: (query: string) => {
+            return {
+                queryKey: ["search", "movie"],
+                queryFn: generateFetch<IMovieData>(`/search/movie?query=${query}&language=kor&page=1`)
+            }
+        },
+        TV: (query: string) => {
+            return {
+                queryKey: ["search", "tv"],
+                queryFn: generateFetch<ITVData>(`/search/tv?query=${query}&language=kor&page=1`)
+            }
+        },
+    }
 };
