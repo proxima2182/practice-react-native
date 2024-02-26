@@ -4,9 +4,9 @@ import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import SlideItem from "../components/SlideItem";
-import HorizontalItem, {IHorizontalItemProps} from "../components/HorizontalItem";
+import {IHorizontalItemProps} from "../components/HorizontalItem";
 import VerticalItem, {IVerticalItemProps} from "../components/VerticalItem";
-import {useQueryClient} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import Api from "../Api";
 import Loading from "../components/Loading";
 import {extractKey} from "../utils";
@@ -45,9 +45,9 @@ function mapToItem(array: ITrending[]) {
 const Screen: React.FC<NativeStackScreenProps<any, "Movie">> = ({navigation: {navigate}}) => {
     const queryClient = useQueryClient();
     const [isRefreshing, setRefreshing] = useState(false);
-    const nowPlaying = Api.Movie.nowPlaying();
-    const trending = Api.Movie.trending();
-    const upcoming = Api.Movie.upcoming();
+    const nowPlaying = useQuery(Api.Movie.nowPlaying());
+    const trending = useQuery(Api.Movie.trending());
+    const upcoming = useQuery(Api.Movie.upcoming());
 
     const isLoading = nowPlaying.isLoading || trending.isLoading || upcoming.isLoading;
     // 기존 const isRefreshing = nowPlaying.isRefetching || trending.isRefetching || upcoming.isRefetching 형태로 사용하면

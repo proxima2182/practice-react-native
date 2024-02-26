@@ -5,7 +5,7 @@ import Loading from "../components/Loading";
 import HorizontalList from "../components/HorizontalList";
 import ListTitle from "../components/ListTitle";
 import {IHorizontalItemProps} from "../components/HorizontalItem";
-import {useQueryClient} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 
 function mapToItem(array: ITVData[]) {
     return array.map(item => {
@@ -21,9 +21,9 @@ function mapToItem(array: ITVData[]) {
 const Screen = () => {
     const queryClient = useQueryClient();
     const [isRefreshing, setRefreshing] = useState(false);
-    const airingToday = Api.TV.airingToday();
-    const trending = Api.TV.trending();
-    const topRated = Api.TV.topRated();
+    const airingToday = useQuery(Api.TV.airingToday());
+    const trending = useQuery(Api.TV.trending());
+    const topRated = useQuery(Api.TV.topRated());
 
     const isLoading = airingToday.isLoading || trending.isLoading || topRated.isLoading;
     const onRefresh = async () => {
