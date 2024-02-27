@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import {Animated, Easing, TouchableOpacity} from "react-native";
+import {Animated, Pressable} from "react-native";
 import {useRef, useState} from "react";
 
 const Container = styled.View`
@@ -31,36 +31,38 @@ export default function App() {
     const toggleUp = () => {
         setUp(prev => !prev)
         Y_POSITION.addListener(({value}) => {
-            console.log(value)
+            // console.log(value)
         })
     }
     const moveUp = () => {
         Animated.timing(Y_POSITION, {
             toValue: up ? 200 : -200,
-            duration: 500,
             useNativeDriver: true,
-            // easing: Easing.elastic(5)
-            easing: Easing.cubic
         }).start(toggleUp);
-        // Animated.spring(Y, {
-        //     toValue: -200,
-        //     bounciness: 10,
-        //     useNativeDriver: true
-        // }).start();
     }
     // 왜 addListener 없으면 작동이 정상으로안되지..?
     Y_POSITION.addListener(({value}) => {
-        console.log(value)
+        // console.log(value)
+    })
+    const opacityValue = Y_POSITION.interpolate({
+        inputRange: [-200, 0, 200],
+        outputRange: [1, 0, 1]
+    })
+    const borderRadius = Y_POSITION.interpolate({
+        inputRange: [-200, 200],
+        outputRange: [100, 0]
     })
     return (
         <Container>
-            <TouchableOpacity onPress={moveUp}>
+            <Pressable onPress={moveUp}>
                 <AnimatedBox style={{
+                    opacity: opacityValue,
+                    borderRadius: borderRadius,
                     transform: [{
                         translateY: Y_POSITION,
                     }]
                 }}/>
-            </TouchableOpacity>
+            </Pressable>
         </Container>
     );
 }
