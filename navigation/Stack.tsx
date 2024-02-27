@@ -7,14 +7,13 @@ import {useColorScheme} from "react-native";
 const Stack = createNativeStackNavigator<StackParamList>();
 
 export type StackParamList = {
-    Detail: { originalTitle: string }
+    Detail: IMovieData | ITVData
 }
 const Component = () => {
     const isDark = useColorScheme() === 'dark';
     return (<Stack.Navigator
         screenOptions={{
             presentation: "fullScreenModal",
-            headerBackTitleVisible: false,
             headerStyle: {
                 backgroundColor: isDark ? NAV_BACKGROUND_DARK : 'white',
             },

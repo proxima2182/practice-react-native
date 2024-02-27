@@ -53,9 +53,7 @@ const Component: React.FC<{ item: IMovieData }> = ({item}) => {
     const goToDetail = () => {
         navigation.navigate("Stack", {
             screen: 'Detail',
-            params: {
-                originalTitle: data.title
-            }
+            params: item
         });
     }
     return (
