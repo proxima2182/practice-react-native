@@ -26,7 +26,7 @@ export default function App() {
 
     // state 는 rerender 하기 때문에 animation 관련 상태값을 저장하기 위해서는 useRef 를 사용해야한다
     // useRef 를 사용하면 초기화된다고 해서 reset 되지 않음
-    const POSITION = useRef(new Animated.ValueXY({x: 0, y: 200})).current;
+    const POSITION = useRef(new Animated.ValueXY({x: -SCREEN_WIDTH / 2 + 50, y: -SCREEN_HEIGHT / 2 + 50})).current;
     const [up, setUp] = useState(false);
     // 생성되어있는 Component 를 Animated 로 바꾸는 방법
     const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -34,18 +34,37 @@ export default function App() {
     const toggleUp = () => {
         setUp(prev => !prev)
     }
+    const bottomLeft = Animated.timing(POSITION, {
+        toValue: {
+            x: -SCREEN_WIDTH / 2 + 50,
+            y: SCREEN_HEIGHT / 2 - 50
+        },
+        useNativeDriver: false,
+    });
+    const bottomRight = Animated.timing(POSITION, {
+        toValue: {
+            x: SCREEN_WIDTH / 2 - 50,
+            y: SCREEN_HEIGHT / 2 - 50
+        },
+        useNativeDriver: false,
+    });
+    const topRight = Animated.timing(POSITION, {
+        toValue: {
+            x: SCREEN_WIDTH / 2 - 50,
+            y: -SCREEN_HEIGHT / 2 + 50
+        },
+        useNativeDriver: false,
+    });
+    const topLeft = Animated.timing(POSITION, {
+        toValue: {
+            x: -SCREEN_WIDTH / 2 + 50,
+            y: -SCREEN_HEIGHT / 2 + 50
+        },
+        useNativeDriver: false,
+    });
     const moveUp = () => {
-        Animated.timing(POSITION, {
-            toValue: up ? 200 : -200,
-            // toValue: up ? {
-            //     x: 200,
-            //     y: 200
-            // } : {
-            //     x: -200,
-            //     y: -200
-            // },
-            useNativeDriver: false, // useNativeDriver: true 하니 addListener 없이 작동안함
-        }).start(toggleUp);
+        // Animated.sequence([topLeft, bottomLeft, bottomRight, topRight]).start()
+        Animated.loop(Animated.sequence([topLeft, bottomLeft, bottomRight, topRight, topLeft])).start()
     }
     const opacityValue = POSITION.y.interpolate({
         inputRange: [-200, 0, 200],
@@ -54,10 +73,6 @@ export default function App() {
     const borderRadius = POSITION.y.interpolate({
         inputRange: [-200, 200],
         outputRange: [100, 0]
-    });
-    const rotation = POSITION.y.interpolate({
-        inputRange: [-200, 200],
-        outputRange: ["-360deg", "360deg"]
     });
     const bgColor = POSITION.y.interpolate({
         inputRange: [-200, 200],
@@ -73,8 +88,8 @@ export default function App() {
                     transform: [
                         // {translateY: POSITION.y},
                         // {translateX: POSITION.x},
-                        ...POSITION.getTranslateTransform(),
-                        {rotateY: rotation}]
+                        ...POSITION.getTranslateTransform()
+                    ]
                 }}/>
             </Pressable>
         </Container>
