@@ -4,7 +4,6 @@ import {useQuery} from "react-query";
 import Api from "../Api";
 import Loading from "../components/Loading";
 import HorizontalList from "../components/HorizontalList";
-import {IHorizontalItemProps} from "../components/HorizontalItem";
 import ListTitle from "../components/ListTitle";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
 
@@ -20,29 +19,7 @@ const SearchBar = styled.TextInput`
     margin: 10px auto;
 `;
 
-function mapToMovieItem(array: IMovieData[]) {
-    return array.map(item => {
-        return {
-            id: item.id,
-            image: item.poster_path,
-            title: item.original_title,
-            rate: item.vote_average,
-        } as IHorizontalItemProps
-    });
-}
-
-function mapToTVItem(array: ITVData[]) {
-    return array.map(item => {
-        return {
-            id: item.id,
-            image: item.poster_path,
-            title: item.original_name,
-            rate: item.vote_average,
-        } as IHorizontalItemProps
-    });
-}
-
-const Screen : React.FC<BottomTabScreenProps<any, "Search">> = () => {
+const Screen: React.FC<BottomTabScreenProps<any, "Search">> = () => {
     const [query, setQuery] = useState("")
     const searchMovie = useQuery({
         ...Api.Search.movie(query),
@@ -75,13 +52,13 @@ const Screen : React.FC<BottomTabScreenProps<any, "Search">> = () => {
                 searchMovie.data ? <ListTitle>Movie Results</ListTitle> : null
             }
             {
-                searchMovie.data ? <HorizontalList array={mapToMovieItem(searchMovie.data?.results ?? [])}/> : null
+                searchMovie.data ? <HorizontalList array={searchMovie.data?.results ?? []}/> : null
             }
             {
                 searchTV.data ? <ListTitle>TV Results</ListTitle> : null
             }
             {
-                searchTV.data ? <HorizontalList array={mapToTVItem(searchTV.data?.results ?? [])}/> : null
+                searchTV.data ? <HorizontalList array={searchTV.data?.results ?? []}/> : null
             }
         </Container>
     );

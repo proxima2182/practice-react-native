@@ -14,7 +14,8 @@ const Component: React.FC<NativeStackScreenProps<StackParamList, 'Detail'>> = (
     }) => {
     useEffect(() => {
         setOptions({
-            title: originalTitle
+            // 이런 식으로 hasKey 확인 가능
+            // title: "original_title" in params ? params.original_title : params.original_name
         })
     }, []);
     return (<Container></Container>);

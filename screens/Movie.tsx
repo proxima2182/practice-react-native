@@ -3,8 +3,7 @@ import {Dimensions, FlatList} from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import SlideItem from "../components/SlideItem";
-import {IHorizontalItemProps} from "../components/HorizontalItem";
-import VerticalItem, {IVerticalItemProps} from "../components/VerticalItem";
+import VerticalItem from "../components/VerticalItem";
 import {useQuery, useQueryClient} from "react-query";
 import Api from "../Api";
 import Loading from "../components/Loading";
@@ -30,17 +29,6 @@ const VerticalSeparator = styled.View`
  * 를 아래와 같이 쓸 수 있다
  */
 const {height: SCREEN_HEIGHT} = Dimensions.get("window");
-
-function mapToItem(array: ITrending[]) {
-    return array.map(item => {
-        return {
-            id: item.id,
-            image: item.poster_path,
-            title: item.original_title,
-            rate: item.vote_average,
-        } as IHorizontalItemProps
-    });
-}
 
 const Screen: React.FC<BottomTabScreenProps<any, "Movie">> = () => {
     const queryClient = useQueryClient();
@@ -78,24 +66,18 @@ const Screen: React.FC<BottomTabScreenProps<any, "Movie">> = () => {
                         }}>
                         {
                             (nowPlaying.data?.results ?? []).map((item, index) => (
-                                <SlideItem key={extractKey(item, index)} props={item}/>
+                                <SlideItem key={extractKey(item, index)} item={item}/>
                             ))
                         }
                     </Swiper>
                     <ListTitle>Trending Movies</ListTitle>
-                    <HorizontalList array={mapToItem(trending.data?.results ?? [])}/>
+                    <HorizontalList array={trending.data?.results ?? []}/>
                     <ListTitle>Coming Soon</ListTitle>
                 </>
             }
             data={upcoming.data?.results ?? []}
             renderItem={({item}) => {
-                return <VerticalItem props={{
-                    id: item.id,
-                    image: item.poster_path,
-                    title: item.original_title,
-                    content: item.overview,
-                    date: item.release_date,
-                } as IVerticalItemProps}/>
+                return <VerticalItem item={item}/>
             }}
             keyExtractor={extractKey}
             ItemSeparatorComponent={VerticalSeparator}

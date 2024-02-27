@@ -29,32 +29,44 @@ const DateText = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
 `;
 
-export interface IVerticalItemProps extends IRootItem {
+interface IVerticalItemData extends IRootItem {
     image: string;
     title: string;
     content: string;
     date: string;
 }
 
-const Component: React.FC<{ props: IVerticalItemProps }> = ({props}) => {
+const itemToData = (item: IMovieData) => {
+    return {
+        id: item.id,
+        image: item.poster_path,
+        title: item.original_title,
+        content: item.overview,
+        date: item.release_date,
+    } as IVerticalItemData
+}
+
+const Component: React.FC<{ item: IMovieData }> = ({item}) => {
     const navigation = useNavigation<RootNavigationProp>();
+    const data = itemToData(item)
+
     const goToDetail = () => {
         navigation.navigate("Stack", {
             screen: 'Detail',
             params: {
-                originalTitle: props.title
+                originalTitle: data.title
             }
         });
     }
     return (
         <TouchableOpacity onPress={goToDetail}>
-            <View key={props.id}>
-                <Poster path={props.image}/>
+            <View key={data.id}>
+                <Poster path={data.image}/>
                 <Column>
-                    <Title>{limitTextSize(props.title, 30)}</Title>
-                    <Overview>{limitTextSize(props.content, 150)}</Overview>
+                    <Title>{limitTextSize(data.title, 30)}</Title>
+                    <Overview>{limitTextSize(data.content, 150)}</Overview>
                     <DateText>
-                        {new Date(props.date).toLocaleDateString('ko')}
+                        {new Date(data.date).toLocaleDateString('ko')}
                     </DateText>
                 </Column>
             </View>

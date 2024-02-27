@@ -4,20 +4,8 @@ import Api from "../Api";
 import Loading from "../components/Loading";
 import HorizontalList from "../components/HorizontalList";
 import ListTitle from "../components/ListTitle";
-import {IHorizontalItemProps} from "../components/HorizontalItem";
 import {useQuery, useQueryClient} from "react-query";
 import {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
-
-function mapToItem(array: ITVData[]) {
-    return array.map(item => {
-        return {
-            id: item.id,
-            image: item.poster_path,
-            title: item.original_name,
-            rate: item.vote_average,
-        } as IHorizontalItemProps
-    });
-}
 
 const Screen: React.FC<BottomTabScreenProps<any, "TV">> = () => {
     const queryClient = useQueryClient();
@@ -38,11 +26,11 @@ const Screen: React.FC<BottomTabScreenProps<any, "TV">> = () => {
         (<ScrollView
             refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh}/>}>
             <ListTitle>Airing Today</ListTitle>
-            <HorizontalList array={mapToItem(airingToday.data?.results ?? [])}/>
+            <HorizontalList array={airingToday.data?.results ?? []}/>
             <ListTitle>Trending</ListTitle>
-            <HorizontalList array={mapToItem(trending.data?.results ?? [])}/>
+            <HorizontalList array={trending.data?.results ?? []}/>
             <ListTitle>Top Rated</ListTitle>
-            <HorizontalList array={mapToItem(topRated.data?.results ?? [])}/>
+            <HorizontalList array={topRated.data?.results ?? []}/>
         </ScrollView>)
 };
 

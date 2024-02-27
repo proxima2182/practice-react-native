@@ -33,13 +33,14 @@ const Column = styled.View`
     margin-left: 15px;
 `;
 
-const Component: React.FC<{ props: IMovieData }> = ({props}) => {
+const Component: React.FC<{ item: IMovieData }> = ({item}) => {
     const navigation = useNavigation<RootNavigationProp>();
+    const data = item;
     const goToDetail = () => {
         navigation.navigate('Stack', {
             screen: 'Detail',
             params: {
-                originalTitle: props.original_title
+                originalTitle: data.original_title
             }
         });
     }
@@ -48,18 +49,18 @@ const Component: React.FC<{ props: IMovieData }> = ({props}) => {
         <TouchableWithoutFeedback onPress={goToDetail}>
             <View style={{flex: 1}}>
                 <BackgroundImage source={{
-                    uri: makeImagePath(props.backdrop_path)
+                    uri: makeImagePath(data.backdrop_path)
                 }}/>
                 <BlurView
                     intensity={80}
                     tint={isDark ? 'dark' : 'light'}
                     style={StyleSheet.absoluteFill}>
                     <Wrapper>
-                        <Poster path={props.poster_path}/>
+                        <Poster path={data.poster_path}/>
                         <Column>
-                            <Title>{props.original_title}</Title>
-                            <RateText vote_average={props.vote_average}/>
-                            <Overview>{limitTextSize(props.overview, 100)}</Overview>
+                            <Title>{data.original_title}</Title>
+                            <RateText vote_average={data.vote_average}/>
+                            <Overview>{limitTextSize(data.overview, 100)}</Overview>
                         </Column>
                     </Wrapper>
                 </BlurView>

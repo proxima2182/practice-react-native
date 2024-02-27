@@ -36,13 +36,13 @@ export default {
         trending: () => {
             return {
                 queryKey: ["movie", "trending"],
-                queryFn: generateFetch<ITrending>('/trending/movie/week')
+                queryFn: generateFetch<IMovieData>('/trending/movie/week')
             }
         },
         upcoming: () => {
             return {
                 queryKey: ["movie", "upcoming"],
-                queryFn: generateFetch<IUpcoming>('/movie/upcoming?language=kor&page=1')
+                queryFn: generateFetch<IMovieData>('/movie/upcoming?language=kor&page=1')
             }
         },
     },

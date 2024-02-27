@@ -18,28 +18,40 @@ const Title = styled.Text`
     color: ${(props) => props.theme.mainTextColor};
 `;
 
-export interface IHorizontalItemProps extends IRootItem {
+export interface IHorizontalItemData extends IRootItem {
     image: string;
     title: string;
     rate: number;
 }
 
-const Component: React.FC<{ props: IHorizontalItemProps }> = ({props}) => {
+export type IHorizontalItem = IMovieData | ITVData;
+
+function itemToData(item: IHorizontalItem) {
+    return {
+        id: item.id,
+        image: item.poster_path,
+        title: "original_title" in item ? item.original_title : item.original_name,
+        rate: item.vote_average,
+    } as IHorizontalItemData;
+}
+
+const Component: React.FC<{ item: IHorizontalItem }> = ({item}) => {
     const navigation = useNavigation<RootNavigationProp>();
+    const data = itemToData(item);
     const goToDetail = () => {
         navigation.navigate('Stack', {
             screen: 'Detail',
             params: {
-                originalTitle: props.title
+                originalTitle: data.title
             }
         });
     }
     return (
         <TouchableOpacity onPress={goToDetail}>
-            <TrendingView key={props.id}>
-                <Poster path={props.image}/>
-                <RateText vote_average={props.rate} style={{width: '100%', fontSize: 12}}/>
-                <Title>{limitTextSize(props.title, 30)}</Title>
+            <TrendingView key={data.id}>
+                <Poster path={data.image}/>
+                <RateText vote_average={data.rate} style={{width: '100%', fontSize: 12}}/>
+                <Title>{limitTextSize(data.title, 30)}</Title>
             </TrendingView>
         </TouchableOpacity>
     );
