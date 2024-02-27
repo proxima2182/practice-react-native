@@ -46,7 +46,7 @@ const Component: React.FC<{ item: IHorizontalItem }> = ({item}) => {
     }
     return (
         <TouchableOpacity onPress={goToDetail}>
-            <TrendingView key={data.id}>
+            <TrendingView>
                 <Poster path={data.image}/>
                 <RateText vote_average={data.rate} style={{width: '100%', fontSize: 12}}/>
                 <Title>{limitTextSize(data.title, 30)}</Title>
@@ -54,4 +54,4 @@ const Component: React.FC<{ item: IHorizontalItem }> = ({item}) => {
         </TouchableOpacity>
     );
 }
-export default Component;
+export default React.memo(Component);

@@ -134,7 +134,7 @@ const Component: React.FC<NativeStackScreenProps<StackParamList, 'Detail'>> = (
             {detail.isLoading ? <Loading/> : null}
             <ButtonBox>
                 {detail.data?.videos?.results?.map(video =>
-                    <Button onPress={() => {
+                    <Button key= {video.id} onPress={() => {
                         openYoutubeLink(video.key)
                     }}>
                         <Ionicons

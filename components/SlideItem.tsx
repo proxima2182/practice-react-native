@@ -58,7 +58,7 @@ const Component: React.FC<{ item: IMovieData }> = ({item}) => {
                         <Column>
                             <Title>{data.original_title}</Title>
                             <RateText vote_average={data.vote_average}/>
-                            <Overview>{limitTextSize(data.overview, 100)}</Overview>
+                            <Overview>{limitTextSize(data.overview, 60)}</Overview>
                         </Column>
                     </Wrapper>
                 </BlurView>
@@ -67,4 +67,4 @@ const Component: React.FC<{ item: IMovieData }> = ({item}) => {
     )
 };
 
-export default Component;
+export default React.memo(Component);

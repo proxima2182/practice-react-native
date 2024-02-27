@@ -58,11 +58,11 @@ const Component: React.FC<{ item: IMovieData }> = ({item}) => {
     }
     return (
         <TouchableOpacity onPress={goToDetail}>
-            <View key={data.id}>
+            <View>
                 <Poster path={data.image}/>
                 <Column>
                     <Title>{limitTextSize(data.title, 30)}</Title>
-                    <Overview>{limitTextSize(data.content, 150)}</Overview>
+                    <Overview>{limitTextSize(data.content, 100)}</Overview>
                     <DateText>
                         {new Date(data.date).toLocaleDateString('ko')}
                     </DateText>
@@ -71,4 +71,4 @@ const Component: React.FC<{ item: IMovieData }> = ({item}) => {
         </TouchableOpacity>
     );
 }
-export default Component;
+export default React.memo(Component);

@@ -6,7 +6,7 @@ export const limitTextSize = (text: string, count: number) => {
     return `${text.slice(0, count)}${text.length > count ? "..." : ""}`
 }
 
-export const extractKey = (item: IRootItem, index: number) => item.id ?? 'I' + index;
+export const extractKey = (item: IRootItem, index: number) => item.id + index ?? 'I' + index;
 
 /**
  * to create interface
