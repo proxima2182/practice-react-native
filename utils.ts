@@ -14,12 +14,33 @@ export const extractKey = (item: IRootItem, index: number) => item.id ?? 'I' + i
  */
 export const extractObject = (obj: any) => {
     if (!obj) return;
-    console.log(obj)
-    console.log("----------------------------")
     let json = JSON.parse(JSON.stringify(obj));
     for (let key in json) {
-        console.log(`${key} : ${typeof json[key]};`);
+        if (json[key]) {
+            if (typeof json[key] === 'object') {
+                if (Array.isArray(json[key])) {
+                    if (json[key].length > 0) {
+                        if (json[key][0]) {
+                            const item = json[key][0]
+                            if (typeof item === 'object') {
+                                console.log(`${key} : {`);
+                                extractObject(item)
+                                console.log(`}[];`);
+                            } else {
+                                console.log(`${key} : ${typeof item}[];`);
+                            }
+                        }
+                    } else {
+                        console.log(`${key} : ${typeof json[key]};`);
+                    }
+                } else {
+                    console.log(`${key} : {`);
+                    extractObject(json[key])
+                    console.log(`};`);
+                }
+            } else {
+                console.log(`${key} : ${typeof json[key]};`);
+            }
+        }
     }
-    console.log("----------------------------")
-    console.log("----------------------------")
 }
