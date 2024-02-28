@@ -1,79 +1,183 @@
 import styled from "styled-components/native";
-import {Animated, Dimensions, PanResponder, View} from "react-native";
-import {useRef} from "react";
+import {Animated, PanResponder, View} from "react-native";
+import {Ionicons} from "@expo/vector-icons";
+import {useRef, useState} from "react";
+import icons from "./icons";
 
 const Container = styled.View`
     flex: 1;
     justify-content: center;
     align-items: center;
+    background-color: #00a8ff;
 `;
-// styled 를 이용해서 Animated Component 만드는 방법
-// styled(Animated.createAnimatedComponent(TouchableOpacity))
-const Box = styled.View`
-    background-color: tomato;
-    width: 100px;
-    height: 100px;
+const CardContainer = styled.View`
+    flex: 3;
+    justify-content: center;
+    align-items: center;
+`;
+// 이렇게 styled 를 가져오지 않으면 자동완성이 안됨
+const Card = styled(Animated.createAnimatedComponent(View))`
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background-color: #fff;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    elevation: 5;
+`;
+const ButtonContainer = styled.View`
+    flex: 1;
+    flex-direction: row;
+    margin-top: 50px;
+`;
+const Button = styled.Pressable`
+    width: 58px;
+    height: 58px;
+    margin: 0 10px;
 `;
 
 export default function App() {
-    // 1. Animated.Value 를 사용한다
-    // 2. 직접 Animated.Value 값을 설정하지 않는다
-    // * decay(), spring(),timing()
-    // 3. Animated.XXXX Component 를 사용한다
-    // * 만약 지원하는 Image, ScrollView, Text, View, FlatList, SectionList 에 없다면 createAnimatedComponent() 사용
-
-    // state 는 rerender 하기 때문에 animation 관련 상태값을 저장하기 위해서는 useRef 를 사용해야한다
-    // useRef 를 사용하면 초기화된다고 해서 reset 되지 않음
-    const POSITION = useRef(new Animated.ValueXY({
-        x: 0,
-        y: 0
-    })).current;
-
-    // 생성되어있는 Component 를 Animated 로 바꾸는 방법
-    const AnimatedBox = Animated.createAnimatedComponent(Box);
-
-    const borderRadius = POSITION.y.interpolate({
-        inputRange: [-200, 200],
-        outputRange: [100, 0]
+    const scale = useRef(new Animated.Value(1)).current;
+    const position = useRef(new Animated.Value(0)).current;
+    const rotation = position.interpolate({
+        inputRange: [-250, 250],
+        outputRange: ['-15deg', '15deg'],
+        extrapolate: 'extend', //range 를 벗어났을 때의 동작 extend(계속), identity(이상해짐), clamp(멈춤)
     });
-    const bgColor = POSITION.y.interpolate({
-        inputRange: [-200, 200],
-        outputRange: ["rgb(255,99,71)", "rgb(71,166,255)"]
+    const opacity = position.interpolate({
+        inputRange: [-280, -200, 200, 280],
+        outputRange: [0, 1, 1, 0],
+    });
+    const scaleSecond = position.interpolate({
+        inputRange: [-250, 0, 250],
+        outputRange: [1, 0, 1],
+        extrapolate: 'clamp',
     })
+
+    position.addListener((value) => {
+        console.log(value)
+    });
+
+    const animationScaleIn = Animated.spring(scale, {
+        toValue: 0.95,
+        useNativeDriver: false
+    })
+    const animationScaleOut = Animated.spring(scale, {
+        toValue: 1,
+        useNativeDriver: false
+    });
+    const animationGoCenter = Animated.spring(position, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: false
+    });
+    const animationGoLeft = Animated.spring(position, {
+        toValue: -280,
+        tension: 50,
+        restSpeedThreshold: 100, //애니메이션이 정지되었다고 취급하는 움직임 범위 수치
+        restDisplacementThreshold: 100,
+        useNativeDriver: false,
+    });
+    const animationGoRight = Animated.spring(position, {
+        toValue: 280,
+        tension: 50,
+        useNativeDriver: false,
+    });
+
     const panResponder = useRef(PanResponder.create({
         onStartShouldSetPanResponder: () => true,
-        // onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (_, {dx}) => {
+            position.setValue(dx);
+        },
         onPanResponderGrant: () => {
-            console.log("Touch Started")
-            // 함수 시작할 때 호출됨
-            POSITION.setOffset({
-                x: POSITION.x.__getValue(),
-                y: POSITION.y.__getValue(),
-            })
+            animationScaleIn.start()
         },
-        onPanResponderMove: (_, {dx, dy}) => {
-            // dx, dy 는 터치 시작으로부터 이동한 양이기 때문에 Release 후에는 다시 0부터 시작함
-            POSITION.setValue({
-                x: dx,
-                y: dy
-            });
-        },
-        onPanResponderRelease: () => {
-            console.log("Touch Finished")
-            POSITION.flattenOffset();
-        },
-
+        onPanResponderRelease: (_, {dx}) => {
+            if (dx < -230) {
+                animationGoLeft.start(onDismiss);
+            } else if (dx > 230) {
+                animationGoRight.start(onDismiss);
+            } else {
+                Animated.parallel([
+                    animationScaleOut,
+                    animationGoCenter
+                ]).start();
+            }
+        }
     })).current;
+
+    const [index, setIndex] = useState(0);
+
+    const onDismiss = () => {
+        scale.setValue(1)
+        position.setValue(0)
+        setIndex(prev => icons.length <= prev + 1 ? 0 : prev + 1);
+    }
+
+    const onPressedClose = () => {
+        animationGoLeft.start(onDismiss);
+    }
+    const onPressedCheck = () => {
+        animationGoRight.start(onDismiss);
+    }
+
     return (
         <Container>
-            <AnimatedBox
-                style={{
-                    borderRadius: borderRadius,
-                    backgroundColor: bgColor,
-                    transform: POSITION.getTranslateTransform()
-                }}
-                {...panResponder.panHandlers}>
-            </AnimatedBox>
+            <CardContainer>
+                <Card
+                    style={{
+                        transform: [{
+                            scale: scaleSecond,
+                        }]
+                    }}
+                    {...panResponder.panHandlers}>
+                    <Ionicons name={icons[((index + 1) % icons.length)]} color="#192a56" size={100}/>
+                </Card>
+                <Card
+                    style={{
+                        opacity: opacity,
+                        transform: [{
+                            scale: scale
+                        }, {
+                            translateX: position
+                        }, {
+                            rotateZ: rotation
+                        }]
+                    }}
+                    {...panResponder.panHandlers}>
+                    <Ionicons name={icons[index]} color="#192a56" size={100}/>
+                </Card>
+            </CardContainer>
+            <ButtonContainer>
+                <Button onPress={onPressedClose}>
+                    <Ionicons name="close-circle" color="white" size={58}/>
+                </Button>
+                <Button onPress={onPressedCheck}>
+                    <Ionicons name="checkmark-circle" color="white" size={58}/>
+                </Button>
+            </ButtonContainer>
         </Container>
     );
 }
+
+// selective stylesheet
+// const styles = StyleSheet.create({
+//     container: {
+//         ...Platform.select({
+//             ios: {
+//                 shadowColor: "rgb(0,0,0)",
+//                 shadowOpacity: 0.3,
+//                 shadowRadius: 5,
+//                 shadowOffset: {
+//                     height: -1,
+//                     width: 0
+//                 }
+//             },
+//             android: {
+//                 elevation: 5
+//             }
+//         })
+//     }
+// })
